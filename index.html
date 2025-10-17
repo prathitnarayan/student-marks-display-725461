@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Marks</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        #average-marks {
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Student Marks</h1>
+    <table id="marks-table" aria-labelledby="marks-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Marks</th>
+            </tr>
+        </thead>
+        <tbody id="marks-body"></tbody>
+    </table>
+    <div id="average-marks" aria-live="polite"></div>
+    <script>
+        fetch('data:application/json;base64,eyJzdHVkZW50cyI6IFt7Im5hbWUiOiAiQWxpY2UiLCAibWFya3MiOiA5NX0sIHsibmFtZSI6ICJCb2IiLCAibWFya3MiOiA4N30sIHsibmFtZSI6ICJDaGFybGllIiwgIm1hcmtzIjogOTJ9XX0=')
+            .then(response => response.json())
+            .then(data => {
+                const students = data.students;
+                const marksBody = document.getElementById('marks-body');
+                let totalMarks = 0;
+
+                students.forEach(student => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td>${student.name}</td><td>${student.marks}</td>`;
+                    marksBody.appendChild(row);
+                    totalMarks += student.marks;
+                });
+
+                const averageMarks = (totalMarks / students.length).toFixed(2);
+                document.getElementById('average-marks').textContent = `Average Marks: ${averageMarks}`;
+            })
+            .catch(error => {
+                console.error('Error loading data:', error);
+                document.getElementById('average-marks').textContent = 'Error loading data.';
+            });
+    </script>
+</body>
+</html>
